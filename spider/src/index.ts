@@ -1,5 +1,7 @@
 import { Octokit } from "octokit";
 import dotenv from "dotenv";
+import { writeFileSync } from "fs";
+import { writeFile } from "fs/promises";
 
 dotenv.config();
 
@@ -42,7 +44,7 @@ async function main() {
   });
   console.log(orgs);
 
-  let config_map: Map<string, PerRepoInfo> = new Map();
+  let modules: Array<PerRepoInfo> = new Array();
 
   // Get all files content
   await Promise.all(orgs.data.map(async ({ 
@@ -58,7 +60,7 @@ async function main() {
     // Insert config into map if file content is not null.
     if (content != null) {
       console.log(`insert into ${full_name}`)
-      config_map.set(full_name, {
+      modules.push({
         content: Buffer.from(content, "base64").toString('utf-8'),
         repo: full_name,
         create_at: created_at,
@@ -67,14 +69,15 @@ async function main() {
       });
     }
   }));
-  config_map.forEach((perRepo, key, map) => {
+  let module_configs = modules.map(perRepo => {
     let module_config = JSON.parse(perRepo.content) as OsModuleConfig;
     module_config.url = perRepo.url;
     module_config.repo = perRepo.repo;
     module_config.created_at = perRepo.create_at;
     module_config.updated_at = perRepo.update_at;
-    console.log(module_config);
+    return module_config;
   });
+  await writeFile("../web/data.json", JSON.stringify(module_configs, null, 2));
 }
 
 // call entry point
