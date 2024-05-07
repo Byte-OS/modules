@@ -11,14 +11,14 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    name: Autograding
+    name: depoly modules list
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: install nodejs
         uses: actions/setup-node@v3.0.0
         with:
-          node-version: '16.x'
+          node-version: '18.x'
       - name: install spider pkg and run
         run: |
           cd spider && npm install
