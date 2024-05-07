@@ -1,6 +1,8 @@
 # @format
 
-name: GitHub Classroom Workflow
+name: GitHub Deploy Workflow
+
+permissions: write-all
 
 on:
   schedule:
@@ -11,7 +13,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    name: depoly modules list
+    name: Deploying
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -24,7 +26,7 @@ jobs:
           cd spider && npm install
           npm run start
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: build pages
         run: |
           cd web && npm install && npm run build
