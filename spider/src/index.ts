@@ -55,7 +55,7 @@ async function main() {
     let content = await octokit.rest.repos.getContent({
       owner: owner.login,
       repo: name,
-      path: "os_module.json",
+      path: "README.json",
     }).then(result => (result.data as any)['content']).catch(() => null);
     // Insert config into map if file content is not null.
     if (content != null) {
