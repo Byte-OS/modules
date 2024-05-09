@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, getKeyValue, Chip} from "@nextui-org/react";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, getKeyValue, Chip, Button} from "@nextui-org/react";
 import {Input} from "@nextui-org/react";
 import data from "../data.json";
 import { fromDate, getLocalTimeZone } from "@internationalized/date";
@@ -38,6 +38,7 @@ export default function IndexPage() {
 		<TableColumn>keywords</TableColumn>
 		<TableColumn>repo</TableColumn>
 		<TableColumn>update_at</TableColumn>
+		<TableColumn>extra_operation</TableColumn>
       </TableHeader>
       <TableBody items={data.filter((item) => {
 		return item.name.match(condition) || item.description.match(condition) || item.keywords.indexOf(condition) >= 0
@@ -55,11 +56,15 @@ export default function IndexPage() {
 				return <> {name};{email} <br /></>
 			})}</TableCell>
 			<TableCell>{item['keywords'].map((value) => {
-				return <><Chip>{value}</Chip>&nbsp;</>;
+				return <><Chip style={{
+					cursor: "pointer"
+				}} onClick={() => setCondition(value)}>{value}</Chip>&nbsp;</>;
 			})}</TableCell>
 			<TableCell>{item['repo']}</TableCell>
 			<TableCell>{(new Date(item['updated_at'])).toLocaleString()}</TableCell>
-
+			<TableCell>
+				<Button onPress={()=>window.open(`https://github.com/${item['repo']}/issues/new/choose`)} size="sm" className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg">Comment</Button>
+			</TableCell>
           </TableRow>
         )}
       </TableBody>
